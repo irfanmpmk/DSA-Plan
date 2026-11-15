@@ -2,6 +2,8 @@
 
 Grids and two strings.
 
+**Learn first:** [Video: 2-D DP](https://www.youtube.com/results?search_query=NeetCode%202-D%20dynamic%20programming) · [Video: longest common subsequence](https://www.youtube.com/results?search_query=longest%20common%20subsequence%20dynamic%20programming%20explained)
+
 | Done | Type | Item | Solution |
 |---|---|---|---|
 | [ ] | Medium | [Unique Paths](https://leetcode.com/problems/unique-paths/) | `unique_paths.py` |

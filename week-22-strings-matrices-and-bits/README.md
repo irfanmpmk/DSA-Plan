@@ -2,6 +2,8 @@
 
 KMP and the small topics.
 
+**Learn first:** [Video: KMP](https://www.youtube.com/results?search_query=Abdul%20Bari%20KMP%20algorithm) · [Video: bit manipulation](https://www.youtube.com/results?search_query=NeetCode%20bit%20manipulation)
+
 | Done | Type | Item | Solution |
 |---|---|---|---|
 | [ ] | Learn | KMP: build the prefix (LPS) table, then search in O(n + m) | `kmp.py` |

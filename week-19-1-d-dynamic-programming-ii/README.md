@@ -2,6 +2,8 @@
 
 Strings and subsequences.
 
+**Learn first:** [Video: DP on strings](https://www.youtube.com/results?search_query=NeetCode%20longest%20palindromic%20substring%20word%20break)
+
 | Done | Type | Item | Solution |
 |---|---|---|---|
 | [ ] | Medium | [Longest Palindromic Substring](https://leetcode.com/problems/longest-palindromic-substring/) | `longest_palindromic_substring.py` |

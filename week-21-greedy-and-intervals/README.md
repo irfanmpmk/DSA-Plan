@@ -2,6 +2,8 @@
 
 Local choices, sorting by start/end.
 
+**Learn first:** [Video: greedy](https://www.youtube.com/results?search_query=NeetCode%20greedy%20jump%20game) · [Video: intervals](https://www.youtube.com/results?search_query=NeetCode%20merge%20intervals)
+
 | Done | Type | Item | Solution |
 |---|---|---|---|
 | [ ] | Medium | [Maximum Subarray](https://leetcode.com/problems/maximum-subarray/) | `maximum_subarray.py` |

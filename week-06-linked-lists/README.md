@@ -2,6 +2,8 @@
 
 Pointers, fast/slow, dummy nodes.
 
+**Learn first:** [See it: linked list](https://visualgo.net/en/list) · [Video: linked lists](https://www.youtube.com/results?search_query=NeetCode%20linked%20list)
+
 | Done | Type | Item | Solution |
 |---|---|---|---|
 | [ ] | Learn | Implement a singly linked list (insert, delete, reverse) | `linked_list.py` |

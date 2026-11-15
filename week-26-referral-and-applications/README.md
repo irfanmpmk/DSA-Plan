@@ -2,6 +2,8 @@
 
 Go.
 
+**Learn first:** [Google careers](https://www.google.com/about/careers/applications/)
+
 | Done | Type | Item | Solution |
 |---|---|---|---|
 | [ ] | Prep | Update your CV: lead with impact numbers and your products |  |

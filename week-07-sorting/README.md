@@ -2,6 +2,8 @@
 
 Know how each works and its complexity.
 
+**Learn first:** [See it: all sorts side by side](https://visualgo.net/en/sorting) · [Video: merge sort](https://www.youtube.com/results?search_query=Abdul%20Bari%20merge%20sort) · [Video: quick sort](https://www.youtube.com/results?search_query=Abdul%20Bari%20quick%20sort) · [Video: heap sort](https://www.youtube.com/results?search_query=Abdul%20Bari%20heap%20sort%20heapify)
+
 | Done | Type | Item | Solution |
 |---|---|---|---|
 | [ ] | Learn | Bubble, selection and insertion sort: write each once, know why they're O(n²) | `simple_sorts.py` |

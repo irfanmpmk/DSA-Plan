@@ -2,6 +2,8 @@
 
 Grids, BFS, DFS, topological sort.
 
+**Learn first:** [See it: BFS and DFS](https://visualgo.net/en/dfsbfs) · [Video: graph theory](https://www.youtube.com/results?search_query=William%20Fiset%20graph%20theory) · [Series: graphs](https://www.youtube.com/results?search_query=take%20U%20forward%20graph%20series) · [Video: topological sort](https://www.youtube.com/results?search_query=topological%20sort%20Kahn's%20algorithm)
+
 | Done | Type | Item | Solution |
 |---|---|---|---|
 | [ ] | Learn | Graph as adjacency list; write BFS and DFS (recursive and with a stack) | `graph.py` |

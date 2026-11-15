@@ -2,6 +2,8 @@
 
 Redo, don't add.
 
+**Learn first:** [NeetCode roadmap (pick weak spots)](https://neetcode.io/roadmap)
+
 | Done | Type | Item | Solution |
 |---|---|---|---|
 | [ ] | Prep | Redo 6 problems you needed help with, from scratch |  |

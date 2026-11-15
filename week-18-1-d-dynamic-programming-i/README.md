@@ -2,6 +2,8 @@
 
 Recursion → memo → table.
 
+**Learn first:** [Course: dynamic programming](https://www.youtube.com/results?search_query=freeCodeCamp%20dynamic%20programming%20Alvin) · [Video: 1-D DP](https://www.youtube.com/results?search_query=NeetCode%201-D%20dynamic%20programming) · [Python: functools.cache](https://docs.python.org/3/library/functools.html#functools.cache)
+
 | Done | Type | Item | Solution |
 |---|---|---|---|
 | [ ] | Learn | DP method: recursion, then @cache memoisation, then a bottom-up table | `dp.py` |

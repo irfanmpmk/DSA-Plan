@@ -2,6 +2,8 @@
 
 Practise under real conditions.
 
+**Learn first:** [Video: watch a mock interview](https://www.youtube.com/results?search_query=Google%20coding%20interview%20mock%20software%20engineer)
+
 | Done | Type | Item | Solution |
 |---|---|---|---|
 | [ ] | Prep | Mock 1 with your brother: 2 coding problems, 45 minutes, in a shared doc |  |

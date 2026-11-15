@@ -2,6 +2,8 @@
 
 Python dict, set, Counter.
 
+**Learn first:** [NeetCode roadmap](https://neetcode.io/roadmap) · [Video: arrays and hashing](https://www.youtube.com/results?search_query=NeetCode%20arrays%20and%20hashing) · [See it: hash table](https://visualgo.net/en/hashtable) · [Python: collections](https://docs.python.org/3/library/collections.html)
+
 | Done | Type | Item | Solution |
 |---|---|---|---|
 | [ ] | Learn | How a hash table works (hashing, collisions) and Python's dict/set/Counter | `hash_table.py` |

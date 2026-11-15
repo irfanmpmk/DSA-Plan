@@ -2,6 +2,8 @@
 
 Union-find and harder traversal.
 
+**Learn first:** [See it: union-find](https://visualgo.net/en/ufds) · [Video: union-find](https://www.youtube.com/results?search_query=William%20Fiset%20union%20find)
+
 | Done | Type | Item | Solution |
 |---|---|---|---|
 | [ ] | Learn | Disjoint set (union-find) with path compression and union by rank | `dsu.py` |

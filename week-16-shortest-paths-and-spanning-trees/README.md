@@ -2,6 +2,8 @@
 
 Dijkstra, Bellman-Ford, Floyd-Warshall, Kruskal, Prim.
 
+**Learn first:** [See it: shortest paths](https://visualgo.net/en/sssp) · [See it: spanning trees](https://visualgo.net/en/mst) · [Video: Dijkstra](https://www.youtube.com/results?search_query=Abdul%20Bari%20Dijkstra%20algorithm) · [Video: Bellman-Ford](https://www.youtube.com/results?search_query=Abdul%20Bari%20Bellman%20Ford) · [Video: Floyd-Warshall](https://www.youtube.com/results?search_query=Abdul%20Bari%20Floyd%20Warshall) · [Video: Kruskal and Prim](https://www.youtube.com/results?search_query=Abdul%20Bari%20Prim%20Kruskal%20minimum%20spanning%20tree)
+
 | Done | Type | Item | Solution |
 |---|---|---|---|
 | [ ] | Learn | Dijkstra with heapq: single-source shortest path | `dijkstra.py` |

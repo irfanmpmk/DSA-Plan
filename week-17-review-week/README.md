@@ -2,6 +2,8 @@
 
 Trees and graphs from memory.
 
+**Learn first:** [NeetCode roadmap (pick weak spots)](https://neetcode.io/roadmap)
+
 | Done | Type | Item | Solution |
 |---|---|---|---|
 | [ ] | Prep | Redo 6 tree and graph problems you needed help with |  |

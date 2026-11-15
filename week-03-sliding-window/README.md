@@ -2,6 +2,8 @@
 
 Fixed and variable windows; deque.
 
+**Learn first:** [Video: sliding window](https://www.youtube.com/results?search_query=NeetCode%20sliding%20window%20technique) · [Python: deque](https://docs.python.org/3/library/collections.html#collections.deque)
+
 | Done | Type | Item | Solution |
 |---|---|---|---|
 | [ ] | Learn | Deque: collections.deque, append/popleft in O(1) | `deque.py` |

@@ -87,6 +87,8 @@ details.week > summary::-webkit-details-marker { display: none }
 .legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 13px; color: var(--muted) }
 .legend span { display: inline-flex; gap: 6px; align-items: center }
 .legend .tag { width: 30px }
+.learn { padding: 0 16px 12px; display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: baseline; font-size: 13px }
+.learn b { color: var(--learn); font-weight: 600 }
 footer { margin-top: 24px; font-size: 13px; color: var(--muted) }
 .sync-setup { margin-top: 40px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px; display: grid; gap: 10px; font-size: 14px }
 .sync-setup p, .sync-setup ol { margin: 0 } .sync-setup ol { padding-left: 20px; display: grid; gap: 4px }
@@ -307,6 +309,37 @@ const WEEKS = [
     ["D","keep","Keep 3 problems a week going until the interviews"] ] },
 ];
 
+// What to study before each week's problems: [label, url]. YouTube links are searches, so they keep working.
+const yt = q => "https://www.youtube.com/results?search_query=" + encodeURIComponent(q);
+const LEARN = {
+  1: [["NeetCode roadmap", "https://neetcode.io/roadmap"], ["Video: arrays and hashing", yt("NeetCode arrays and hashing")], ["See it: hash table", "https://visualgo.net/en/hashtable"], ["Python: collections", "https://docs.python.org/3/library/collections.html"]],
+  2: [["Video: two pointers", yt("NeetCode two pointers technique")]],
+  3: [["Video: sliding window", yt("NeetCode sliding window technique")], ["Python: deque", "https://docs.python.org/3/library/collections.html#collections.deque"]],
+  4: [["See it: stack, queue, deque", "https://visualgo.net/en/list"], ["Video: stack problems", yt("NeetCode stack monotonic stack")]],
+  5: [["Video: binary search", yt("NeetCode binary search explained")], ["Python: bisect", "https://docs.python.org/3/library/bisect.html"]],
+  6: [["See it: linked list", "https://visualgo.net/en/list"], ["Video: linked lists", yt("NeetCode linked list")]],
+  7: [["See it: all sorts side by side", "https://visualgo.net/en/sorting"], ["Video: merge sort", yt("Abdul Bari merge sort")], ["Video: quick sort", yt("Abdul Bari quick sort")], ["Video: heap sort", yt("Abdul Bari heap sort heapify")]],
+  8: [["NeetCode roadmap (pick weak spots)", "https://neetcode.io/roadmap"]],
+  9: [["See it: binary search tree", "https://visualgo.net/en/bst"], ["Video: trees", yt("NeetCode binary tree DFS BFS")], ["Series: trees", yt("take U forward binary tree series")]],
+  10: [["Video: binary search trees", yt("NeetCode binary search tree validate")]],
+  11: [["See it: heap", "https://visualgo.net/en/heap"], ["Video: heaps", yt("Abdul Bari heap heapify priority queue")], ["Python: heapq", "https://docs.python.org/3/library/heapq.html"]],
+  12: [["Video: tries", yt("NeetCode implement trie prefix tree")]],
+  13: [["See it: recursion tree", "https://visualgo.net/en/recursion"], ["Video: backtracking", yt("NeetCode backtracking subsets")]],
+  14: [["See it: BFS and DFS", "https://visualgo.net/en/dfsbfs"], ["Video: graph theory", yt("William Fiset graph theory")], ["Series: graphs", yt("take U forward graph series")], ["Video: topological sort", yt("topological sort Kahn's algorithm")]],
+  15: [["See it: union-find", "https://visualgo.net/en/ufds"], ["Video: union-find", yt("William Fiset union find")]],
+  16: [["See it: shortest paths", "https://visualgo.net/en/sssp"], ["See it: spanning trees", "https://visualgo.net/en/mst"], ["Video: Dijkstra", yt("Abdul Bari Dijkstra algorithm")], ["Video: Bellman-Ford", yt("Abdul Bari Bellman Ford")], ["Video: Floyd-Warshall", yt("Abdul Bari Floyd Warshall")], ["Video: Kruskal and Prim", yt("Abdul Bari Prim Kruskal minimum spanning tree")]],
+  17: [["NeetCode roadmap (pick weak spots)", "https://neetcode.io/roadmap"]],
+  18: [["Course: dynamic programming", yt("freeCodeCamp dynamic programming Alvin")], ["Video: 1-D DP", yt("NeetCode 1-D dynamic programming")], ["Python: functools.cache", "https://docs.python.org/3/library/functools.html#functools.cache"]],
+  19: [["Video: DP on strings", yt("NeetCode longest palindromic substring word break")]],
+  20: [["Video: 2-D DP", yt("NeetCode 2-D dynamic programming")], ["Video: longest common subsequence", yt("longest common subsequence dynamic programming explained")]],
+  21: [["Video: greedy", yt("NeetCode greedy jump game")], ["Video: intervals", yt("NeetCode merge intervals")]],
+  22: [["Video: KMP", yt("Abdul Bari KMP algorithm")], ["Video: bit manipulation", yt("NeetCode bit manipulation")]],
+  23: [["Read: System Design Primer", "https://github.com/donnemartin/system-design-primer"], ["Video: system design basics", yt("ByteByteGo system design fundamentals")], ["Read: Factory pattern in Python", "https://refactoring.guru/design-patterns/factory-method/python/example"], ["Read: all design patterns", "https://refactoring.guru/design-patterns"]],
+  24: [["Video: design a chat system", yt("ByteByteGo design chat system")], ["Video: STAR method", yt("STAR method behavioral interview answers")]],
+  25: [["Video: watch a mock interview", yt("Google coding interview mock software engineer")]],
+  26: [["Google careers", "https://www.google.com/about/careers/applications/"]],
+};
+
 const TAGS = { L: "LRN", E: "E", M: "M", H: "H", D: "DES" };
 const keyOf = (w, it) => (it[0] === "L" || it[0] === "D") ? `w${w}-${it[1]}` : it[1];
 const ALL = WEEKS.flatMap((wk, i) => wk.items.map(it => keyOf(i + 1, it)));
@@ -359,6 +392,12 @@ function render() {
       const sm = document.createElement("small"); sm.textContent = wk.s; t.append(sm);
       const c = document.createElement("span"); c.className = "count" + (n === keys.length ? " full" : ""); c.textContent = `${n}/${keys.length}`;
       s.append(wkEl, t, c); d.append(s);
+      if (LEARN[w]) {
+        const lr = document.createElement("div"); lr.className = "learn";
+        const lb = document.createElement("b"); lb.textContent = "Learn first:"; lr.append(lb);
+        LEARN[w].forEach(([label, url]) => { const a = document.createElement("a"); a.href = url; a.target = "_blank"; a.rel = "noopener"; a.textContent = label + " ↗"; lr.append(a); });
+        d.append(lr);
+      }
       const ul = document.createElement("ul"); ul.className = "items";
       wk.items.forEach((it, ii) => {
         const k = keys[ii], li = document.createElement("li"); li.className = "item" + (state.done[k] ? " done" : "");

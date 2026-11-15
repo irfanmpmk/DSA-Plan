@@ -2,6 +2,8 @@
 
 Binary search trees and harder tree problems.
 
+**Learn first:** [Video: binary search trees](https://www.youtube.com/results?search_query=NeetCode%20binary%20search%20tree%20validate)
+
 | Done | Type | Item | Solution |
 |---|---|---|---|
 | [ ] | Medium | [Lowest Common Ancestor of a BST](https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/) | `lowest_common_ancestor_of_a_binary_search_tree.py` |

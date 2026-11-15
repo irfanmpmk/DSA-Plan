@@ -2,6 +2,8 @@
 
 Bigger systems, your stories.
 
+**Learn first:** [Video: design a chat system](https://www.youtube.com/results?search_query=ByteByteGo%20design%20chat%20system) · [Video: STAR method](https://www.youtube.com/results?search_query=STAR%20method%20behavioral%20interview%20answers)
+
 | Done | Type | Item | Solution |
 |---|---|---|---|
 | [ ] | Prep | Design a chat app |  |

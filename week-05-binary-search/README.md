@@ -2,6 +2,8 @@
 
 On arrays and on the answer.
 
+**Learn first:** [Video: binary search](https://www.youtube.com/results?search_query=NeetCode%20binary%20search%20explained) · [Python: bisect](https://docs.python.org/3/library/bisect.html)
+
 | Done | Type | Item | Solution |
 |---|---|---|---|
 | [ ] | Easy | [Binary Search](https://leetcode.com/problems/binary-search/) | `binary_search.py` |

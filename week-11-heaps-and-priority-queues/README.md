@@ -2,6 +2,8 @@
 
 heapq, top-k, streaming.
 
+**Learn first:** [See it: heap](https://visualgo.net/en/heap) · [Video: heaps](https://www.youtube.com/results?search_query=Abdul%20Bari%20heap%20heapify%20priority%20queue) · [Python: heapq](https://docs.python.org/3/library/heapq.html)
+
 | Done | Type | Item | Solution |
 |---|---|---|---|
 | [ ] | Learn | Implement a min-heap (push, pop, heapify), then use heapq as a priority queue | `heap.py` |

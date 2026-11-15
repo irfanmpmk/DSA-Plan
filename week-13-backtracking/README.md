@@ -2,6 +2,8 @@
 
 Choose, explore, undo.
 
+**Learn first:** [See it: recursion tree](https://visualgo.net/en/recursion) · [Video: backtracking](https://www.youtube.com/results?search_query=NeetCode%20backtracking%20subsets)
+
 | Done | Type | Item | Solution |
 |---|---|---|---|
 | [ ] | Medium | [Subsets](https://leetcode.com/problems/subsets/) | `subsets.py` |

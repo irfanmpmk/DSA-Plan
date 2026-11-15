@@ -2,6 +2,8 @@
 
 LIFO, FIFO, monotonic stack.
 
+**Learn first:** [See it: stack, queue, deque](https://visualgo.net/en/list) · [Video: stack problems](https://www.youtube.com/results?search_query=NeetCode%20stack%20monotonic%20stack)
+
 | Done | Type | Item | Solution |
 |---|---|---|---|
 | [ ] | Learn | Implement a stack and a queue in Python from scratch | `stack_queue.py` |

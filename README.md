@@ -2,7 +2,7 @@
 
 My 26-week preparation for Google and similar product-company interviews, in Python: data structures and algorithms, then system design and behavioural interviews.
 
-- **Progress tracker:** [Road to Google](https://claude.ai/artifact/51riDyxErDvUg66DxwKcWX) (private, syncs between phone and computer). A copy also lives in [`docs/index.html`](docs/index.html) for GitHub Pages; it syncs through `progress.json` on the `progress` branch using a fine-grained token.
+- **Progress tracker:** [Road to Google](https://claude.ai/artifact/51riDyxErDvUg66DxwKcWX) (private, syncs between phone and computer). A copy at https://irfanmpmk.github.io/DSA-Plan/ (from [`docs/index.html`](docs/index.html)) syncs through `progress.json` on the `progress` branch using a fine-grained token.
 - **Solutions:** one folder per week, one Python file per problem.
 
 ## Weekly rhythm

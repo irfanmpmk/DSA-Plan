@@ -2,6 +2,8 @@
 
 DFS and BFS on binary trees.
 
+**Learn first:** [See it: binary search tree](https://visualgo.net/en/bst) · [Video: trees](https://www.youtube.com/results?search_query=NeetCode%20binary%20tree%20DFS%20BFS) · [Series: trees](https://www.youtube.com/results?search_query=take%20U%20forward%20binary%20tree%20series)
+
 | Done | Type | Item | Solution |
 |---|---|---|---|
 | [ ] | Learn | Binary tree: build one, write preorder, inorder, postorder and level order | `tree.py` |

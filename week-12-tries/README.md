@@ -2,6 +2,8 @@
 
 Prefix trees.
 
+**Learn first:** [Video: tries](https://www.youtube.com/results?search_query=NeetCode%20implement%20trie%20prefix%20tree)
+
 | Done | Type | Item | Solution |
 |---|---|---|---|
 | [ ] | Learn | Implement a trie with insert, search and startsWith | `trie.py` |

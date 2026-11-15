@@ -2,6 +2,8 @@
 
 Sorted arrays, left/right pointers.
 
+**Learn first:** [Video: two pointers](https://www.youtube.com/results?search_query=NeetCode%20two%20pointers%20technique)
+
 | Done | Type | Item | Solution |
 |---|---|---|---|
 | [ ] | Easy | [Valid Palindrome](https://leetcode.com/problems/valid-palindrome/) | `valid_palindrome.py` |

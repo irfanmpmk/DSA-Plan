@@ -2,6 +2,8 @@
 
 Building blocks.
 
+**Learn first:** [Read: System Design Primer](https://github.com/donnemartin/system-design-primer) · [Video: system design basics](https://www.youtube.com/results?search_query=ByteByteGo%20system%20design%20fundamentals) · [Read: Factory pattern in Python](https://refactoring.guru/design-patterns/factory-method/python/example) · [Read: all design patterns](https://refactoring.guru/design-patterns)
+
 | Done | Type | Item | Solution |
 |---|---|---|---|
 | [ ] | Prep | Learn: load balancing, caching, database indexes, replication, sharding, queues |  |
