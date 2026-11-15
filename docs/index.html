@@ -87,7 +87,15 @@ details.week > summary::-webkit-details-marker { display: none }
 .legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 13px; color: var(--muted) }
 .legend span { display: inline-flex; gap: 6px; align-items: center }
 .legend .tag { width: 30px }
-footer { margin-top: 40px; font-size: 13px; color: var(--muted) }
+footer { margin-top: 24px; font-size: 13px; color: var(--muted) }
+.sync-setup { margin-top: 40px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px; display: grid; gap: 10px; font-size: 14px }
+.sync-setup p, .sync-setup ol { margin: 0 } .sync-setup ol { padding-left: 20px; display: grid; gap: 4px }
+.token-row { display: flex; flex-wrap: wrap; gap: 8px }
+.token-row input { flex: 1 1 240px; min-width: 0; border: 1px solid var(--line); background: var(--bg); border-radius: 6px; padding: 8px 10px; font-family: var(--font-code); font-size: 13px }
+.token-row button { border: 1px solid var(--accent); background: var(--accent); color: var(--surface); border-radius: 6px; padding: 8px 14px; cursor: pointer; font-weight: 600 }
+.token-row button#forget { background: transparent; color: var(--accent) }
+.hint { color: var(--muted); font-size: 13px }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0) }
 @media (max-width: 480px) {
   details.week > summary { grid-template-columns: 1fr auto; }
   .wk { grid-column: 1 / -1 }
@@ -127,7 +135,23 @@ footer { margin-top: 40px; font-size: 13px; color: var(--muted) }
     </div>
   </header>
   <main id="plan"></main>
-  <footer>Problems link to LeetCode. Your ticks are private to your account and sync between your phone and computer when you're signed in.</footer>
+  <section class="sync-setup" aria-labelledby="syncTitle">
+    <h2 id="syncTitle">Sync between devices</h2>
+    <p>Progress is saved to <code>progress.json</code> on the <code>progress</code> branch of this repo, so your phone and computer see the same ticks. Each device needs a GitHub token once.</p>
+    <ol>
+      <li>On GitHub: <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">Settings → Developer settings → Fine-grained tokens → Generate new token</a>.</li>
+      <li>Repository access: <strong>Only select repositories → DSA-Plan</strong>. Permissions: <strong>Contents: Read and write</strong>. Nothing else.</li>
+      <li>Copy the token and paste it here.</li>
+    </ol>
+    <form id="tokenForm" class="token-row">
+      <label for="token" class="sr">GitHub token</label>
+      <input id="token" type="password" autocomplete="off" placeholder="github_pat_…" spellcheck="false">
+      <button type="submit">Save token</button>
+      <button type="button" id="forget" hidden>Remove from this device</button>
+    </form>
+    <p class="hint" id="tokenState"></p>
+  </section>
+  <footer>Problems link to LeetCode. The token stays in this browser only and can reach only this repo.</footer>
 </div>
 
 <script>
@@ -288,8 +312,6 @@ const keyOf = (w, it) => (it[0] === "L" || it[0] === "D") ? `w${w}-${it[1]}` : i
 const ALL = WEEKS.flatMap((wk, i) => wk.items.map(it => keyOf(i + 1, it)));
 
 let state = { start: "", done: {} };
-let saveTarget = null; // "db" | "local"
-let docRef = null, saveTimer = null, writing = false, pending = false;
 
 const $ = id => document.getElementById(id);
 const LS = "road-to-google-v1";
@@ -359,56 +381,129 @@ function render() {
 
 function toggle(k, on) {
   if (on) state.done[k] = true; else delete state.done[k];
-  render(); scheduleSave();
+  noteChange(k, on); render(); scheduleSave();
 }
-$("start").addEventListener("change", e => { state.start = e.target.value; render(); scheduleSave(); });
+$("start").addEventListener("change", e => { state.start = e.target.value; pend.start = state.start; savePend(); render(); scheduleSave(); });
 
+// ---- GitHub sync: progress.json on the "progress" branch of this repo ----
+// Changes made here since the last successful save, replayed on top of the latest copy from GitHub,
+// so ticks made on the phone and on the computer don't overwrite each other.
+function noteChange(k, on) { pend.done[k] = on; savePend(); }
+function savePend() { try { localStorage.setItem(LS + "-pending", JSON.stringify(pend)); } catch {} }
+function loadPend() { try { const p = JSON.parse(localStorage.getItem(LS + "-pending") || "null"); if (p && p.done) return p; } catch {} return { done: {} }; }
+let pend = loadPend();
+
+function repoInfo() {
+  const owner = location.hostname.endsWith(".github.io") ? location.hostname.split(".")[0] : "irfanmpmk";
+  const repo = location.hostname.endsWith(".github.io") ? (location.pathname.split("/")[1] || "DSA-Plan") : "DSA-Plan";
+  return { owner, repo };
+}
+function getToken() { try { return localStorage.getItem(LS + "-token") || ""; } catch { return ""; } }
+const BRANCH = "progress", FILE = "progress.json";
+const b64enc = s => btoa(unescape(encodeURIComponent(s)));
+const b64dec = s => decodeURIComponent(escape(atob(s.replace(/\s/g, ""))));
+
+async function gh(method, path, body) {
+  const { owner, repo } = repoInfo();
+  const res = await fetch(`https://api.github.com/repos/${owner}/${repo}${path}`, {
+    method,
+    headers: { Authorization: `Bearer ${getToken()}`, Accept: "application/vnd.github+json", ...(body ? { "Content-Type": "application/json" } : {}) },
+    body: body ? JSON.stringify(body) : undefined,
+    cache: "no-store",
+  });
+  const data = res.status === 204 ? null : await res.json().catch(() => null);
+  return { status: res.status, data };
+}
+
+async function readRemote() {
+  const r = await gh("GET", `/contents/${FILE}?ref=${BRANCH}&t=${Date.now()}`);
+  if (r.status === 404) return { sha: null, value: null };
+  if (r.status === 401 || r.status === 403) throw new Error("token");
+  if (r.status !== 200) throw new Error("http " + r.status);
+  return { sha: r.data.sha, value: JSON.parse(b64dec(r.data.content)) };
+}
+
+async function ensureBranch() {
+  const b = await gh("GET", `/branches/${BRANCH}`);
+  if (b.status === 200) return;
+  const main = await gh("GET", `/git/ref/heads/main`);
+  if (main.status !== 200) throw new Error("no main branch");
+  const made = await gh("POST", `/git/refs`, { ref: `refs/heads/${BRANCH}`, sha: main.data.object.sha });
+  if (made.status !== 201 && made.status !== 422) throw new Error("branch " + made.status);
+}
+
+function merged(remote) {
+  const base = remote || { start: "", done: {} };
+  const done = { ...(base.done || {}) };
+  for (const [k, on] of Object.entries(pend.done)) { if (on) done[k] = true; else delete done[k]; }
+  return { start: pend.start || base.start || state.start, done };
+}
+
+let syncing = false, again = false;
+async function sync() {
+  if (!getToken()) { setSync("local", "Saved on this device only. Add a GitHub token below to sync."); return; }
+  if (syncing) { again = true; return; }
+  syncing = true; setSync("", "Syncing with GitHub…");
+  try {
+    let attempt = 0;
+    while (true) {
+      const { sha, value } = await readRemote();
+      const next = merged(value);
+      const changed = JSON.stringify(next) !== JSON.stringify(value);
+      if (changed) {
+        if (!sha) await ensureBranch();
+        const put = await gh("PUT", `/contents/${FILE}`, {
+          message: `Progress: ${Object.keys(next.done).length} of ${ALL.length} done`,
+          content: b64enc(JSON.stringify(next, null, 2) + "\n"),
+          branch: BRANCH,
+          ...(sha ? { sha } : {}),
+        });
+        if ((put.status === 409 || put.status === 422) && attempt++ < 2) continue; // someone saved first; re-read and replay
+        if (put.status === 401 || put.status === 403) throw new Error("token");
+        if (put.status !== 200 && put.status !== 201) throw new Error("http " + put.status);
+      }
+      state = next; pend = { done: {} }; savePend(); saveLocal(); render();
+      break;
+    }
+    setSync("ok", "Synced with GitHub");
+  } catch (e) {
+    setSync("local", e.message === "token"
+      ? "GitHub refused the token. Check it has Contents: read and write on this repo."
+      : "Couldn't reach GitHub. Saved on this device; will retry.");
+  }
+  syncing = false;
+  if (again) { again = false; sync(); }
+}
+
+let saveTimer = null;
 function scheduleSave() {
   saveLocal();
-  if (saveTarget !== "db") return;
-  clearTimeout(saveTimer); saveTimer = setTimeout(flush, 700);
-}
-async function flush() {
-  if (writing) { pending = true; return; }
-  writing = true; setSync("", "Saving…");
-  try { await docRef.set({ start: state.start, done: state.done }); setSync("ok", "Synced to your account"); }
-  catch (e) { setSync("local", "Saved on this device only (sync failed)"); }
-  writing = false;
-  if (pending) { pending = false; flush(); }
+  clearTimeout(saveTimer); saveTimer = setTimeout(sync, 2500); // batch quick ticks into one commit
 }
 
-// Start with this device's copy, then switch to the account copy when it arrives.
+$("tokenForm").addEventListener("submit", e => {
+  e.preventDefault();
+  const v = $("token").value.trim();
+  if (!v) return;
+  try { localStorage.setItem(LS + "-token", v); } catch {}
+  $("token").value = ""; showTokenState(); sync();
+});
+$("forget").addEventListener("click", () => {
+  try { localStorage.removeItem(LS + "-token"); } catch {}
+  showTokenState(); setSync("local", "Saved on this device only. Add a GitHub token below to sync.");
+});
+function showTokenState() {
+  const has = !!getToken();
+  $("tokenState").textContent = has ? "A token is saved on this device." : "No token on this device yet.";
+  $("forget").hidden = !has;
+}
+
+// Start with this device's copy, then pull the latest from GitHub; re-check whenever the page comes back into view.
 const local = loadLocal();
 if (local) state = { start: local.start || "", done: local.done || {} };
-if (!state.start) state.start = todayISO();
-render();
-
-(async () => {
-  let db = null, uid = null;
-  try {
-    const [d, u] = await Promise.all([window.claude?.use?.("db"), window.claude?.use?.("user")]);
-    db = d; uid = u ? await u.id() : null;
-  } catch {}
-  if (!db || !uid) { saveTarget = "local"; setSync("local", "Saved on this device only (sign in to sync)"); return; }
-  saveTarget = "db";
-  docRef = db.doc(`data/users/${uid}/progress`);
-  const timer = setTimeout(() => setSync("local", "Can't reach your account yet; saving on this device"), 10000);
-  let first = true;
-  docRef.onSnapshot(snap => {
-    if (!snap.metadata.fromCache) clearTimeout(timer);
-    if (snap.exists) {
-      const data = snap.data();
-      if (!writing && !snap.metadata.hasPendingWrites) {
-        state = { start: data.start || state.start, done: { ...(data.done || {}) } };
-        saveLocal(); render();
-      }
-      if (!snap.metadata.fromCache) setSync("ok", "Synced to your account");
-    } else if (first && !snap.metadata.fromCache) {
-      flush(); // first visit: copy this device's progress to the account
-    }
-    first = false;
-  }, () => { clearTimeout(timer); saveTarget = "local"; setSync("local", "Saved on this device only"); });
-})();
+if (!state.start) { state.start = todayISO(); }
+render(); showTokenState(); sync();
+document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") sync(); });
 </script>
 
 </body></html>
