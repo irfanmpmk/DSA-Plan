@@ -1,0 +1,414 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"></head><body>
+<title>Road to Google</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a study ledger. One header with the plan's state, then 26 week entries grouped by phase; the current week opens itself. */
+:root {
+  --bg: #f5f6f4;
+  --surface: #ffffff;
+  --ink: #1b2330;
+  --muted: #5d6675;
+  --line: #dde1e3;
+  --accent: #2d5f8b;
+  --accent-soft: #e3ecf5;
+  --now: #b5651d;
+  --now-soft: #fbeedd;
+  --easy: #2f7a4a;
+  --medium: #a3671a;
+  --hard: #b23a3a;
+  --learn: #5b4c9a;
+  --font-ui: "Instrument Sans", "Segoe UI", system-ui, sans-serif;
+  --font-code: "JetBrains Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #12161c; --surface: #1a2028; --ink: #e6e9ee; --muted: #9aa3b1; --line: #2c3440;
+  --accent: #7fb0dd; --accent-soft: #1f2d3c; --now: #e3a160; --now-soft: #33261a;
+  --easy: #6cc58d; --medium: #e0ad5c; --hard: #ec8686; --learn: #b3a6ec; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #12161c; --surface: #1a2028; --ink: #e6e9ee; --muted: #9aa3b1; --line: #2c3440;
+  --accent: #7fb0dd; --accent-soft: #1f2d3c; --now: #e3a160; --now-soft: #33261a;
+  --easy: #6cc58d; --medium: #e0ad5c; --hard: #ec8686; --learn: #b3a6ec; color-scheme: dark }
+
+* { box-sizing: border-box }
+body { background: var(--bg); color: var(--ink); font: 15px/1.55 var(--font-ui); }
+.wrap { max-width: 860px; margin: 0 auto; padding-block: 28px 64px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1 { font-size: 30px; line-height: 1.15; margin: 0; letter-spacing: -0.01em; text-wrap: balance }
+h2 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin: 0; font-weight: 600 }
+a { color: var(--accent) }
+button, input { font: inherit; color: inherit }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px }
+
+.head { display: grid; gap: 18px }
+.lede { color: var(--muted); margin: 6px 0 0; max-width: 62ch }
+.status { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px }
+.stat .k { font-size: 12px; color: var(--muted) }
+.stat .v { font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums }
+.stat input[type=date] { border: 1px solid var(--line); background: var(--bg); border-radius: 6px; padding: 4px 8px; margin-top: 4px }
+.bar { height: 8px; background: var(--accent-soft); border-radius: 99px; overflow: hidden; margin-top: 8px }
+.bar > i { display: block; height: 100%; background: var(--accent); width: 0; transition: width .3s }
+.sync { font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 6px }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted) }
+.dot.ok { background: var(--easy) } .dot.local { background: var(--medium) }
+
+.rules { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; font-size: 14px }
+.rules li { display: flex; gap: 8px } .rules b { color: var(--accent); font-family: var(--font-code); font-size: 13px; min-width: 1.5em }
+.week-plan { font-size: 14px; color: var(--muted) }
+.week-plan strong { color: var(--ink) }
+
+.phase { margin-top: 34px; display: grid; gap: 10px }
+.phase-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap }
+.phase-head p { margin: 2px 0 0; color: var(--muted); font-size: 14px }
+
+details.week { background: var(--surface); border: 1px solid var(--line); border-radius: 10px }
+details.week.current { border-color: var(--now); box-shadow: 0 0 0 1px var(--now) }
+details.week > summary { list-style: none; cursor: pointer; padding: 12px 16px; display: grid;
+  grid-template-columns: 64px 1fr auto; gap: 12px; align-items: center }
+details.week > summary::-webkit-details-marker { display: none }
+.wk { font-family: var(--font-code); font-size: 13px; color: var(--muted) }
+.current .wk { color: var(--now); font-weight: 600 }
+.wtitle { font-weight: 600; min-width: 0 }
+.wtitle small { display: block; font-weight: 400; color: var(--muted); font-size: 13px }
+.count { font-family: var(--font-code); font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap }
+.count.full { color: var(--easy); font-weight: 600 }
+.badge-now { background: var(--now-soft); color: var(--now); font-size: 11px; font-weight: 600; padding: 1px 7px; border-radius: 99px; margin-left: 6px; vertical-align: 2px }
+
+.items { list-style: none; margin: 0; padding: 0 16px 14px; display: grid; gap: 2px }
+.item { display: grid; grid-template-columns: 22px 54px 1fr; gap: 10px; align-items: start; padding: 7px 0; border-top: 1px solid var(--line) }
+.item input { width: 18px; height: 18px; margin: 2px 0 0; accent-color: var(--accent); cursor: pointer }
+.tag { font-family: var(--font-code); font-size: 11px; font-weight: 600; text-align: center; border-radius: 4px; padding: 2px 0; border: 1px solid currentColor }
+.tag.E { color: var(--easy) } .tag.M { color: var(--medium) } .tag.H { color: var(--hard) } .tag.L { color: var(--learn) } .tag.D { color: var(--accent) }
+.item label { cursor: pointer; min-width: 0 }
+.item.done label { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--line) }
+.item a { font-size: 12px; margin-left: 6px; white-space: nowrap }
+.legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 13px; color: var(--muted) }
+.legend span { display: inline-flex; gap: 6px; align-items: center }
+.legend .tag { width: 30px }
+footer { margin-top: 40px; font-size: 13px; color: var(--muted) }
+@media (max-width: 480px) {
+  details.week > summary { grid-template-columns: 1fr auto; }
+  .wk { grid-column: 1 / -1 }
+  .item { grid-template-columns: 22px 44px 1fr }
+}
+@media (prefers-reduced-motion: reduce) { .bar > i { transition: none } }
+</style>
+
+<div class="wrap">
+  <header class="head">
+    <div>
+      <h1>Road to Google</h1>
+      <p class="lede">A 26-week plan in Python for Google and similar product companies. About one hour a day on weekdays, a review on Saturday, rest on Sunday. Tick each item when you can solve it yourself.</p>
+    </div>
+    <section class="status" aria-label="Progress">
+      <div class="stat"><div class="k">Started on</div><input type="date" id="start" aria-label="Start date"></div>
+      <div class="stat"><div class="k">This week</div><div class="v" id="curWeek">–</div></div>
+      <div class="stat"><div class="k">Completed</div><div class="v" id="doneCount">0 / 0</div><div class="bar"><i id="barFill"></i></div></div>
+      <div class="stat"><div class="k">Saving</div><div class="sync" id="sync"><span class="dot"></span><span>Connecting…</span></div></div>
+    </section>
+    <div class="week-plan"><strong>Each week:</strong> Mon–Fri one topic or 1–2 problems (≈1 hour) · Saturday redo the week's hardest problem from memory · Sunday off.</div>
+    <section>
+      <h2 style="margin-bottom:8px">How to practise</h2>
+      <ul class="rules">
+        <li><b>1</b><span>Try every problem alone for 30–40 minutes before looking at hints or asking Claude.</span></li>
+        <li><b>2</b><span>Say the time and space complexity out loud, then code it in Python.</span></li>
+        <li><b>3</b><span>If you needed help, mark it and solve it again from scratch 3 days later.</span></li>
+        <li><b>4</b><span>For "Learn" items, write the structure yourself in Python before using the built-in (<code>heapq</code>, <code>collections.deque</code>).</span></li>
+      </ul>
+    </section>
+    <div class="legend" aria-label="Legend">
+      <span><i class="tag L">LRN</i> Learn and implement</span>
+      <span><i class="tag E">E</i> Easy</span>
+      <span><i class="tag M">M</i> Medium</span>
+      <span><i class="tag H">H</i> Hard</span>
+      <span><i class="tag D">DES</i> Design / interview prep</span>
+    </div>
+  </header>
+  <main id="plan"></main>
+  <footer>Problems link to LeetCode. Your ticks are private to your account and sync between your phone and computer when you're signed in.</footer>
+</div>
+
+<script>
+const PHASES = [
+  { name: "Foundations", note: "Weeks 1–8 · arrays, pointers, stacks, binary search, linked lists, sorting" },
+  { name: "Trees and graphs", note: "Weeks 9–17 · trees, heaps, tries, backtracking, graph algorithms" },
+  { name: "Dynamic programming and the rest", note: "Weeks 18–22 · DP, greedy, intervals, strings, bits" },
+  { name: "Interview ready", note: "Weeks 23–26 · system design, behavioural stories, mocks, referral" },
+];
+// [type, slug-or-id, title]  type: L learn, E/M/H LeetCode, D design/prep
+const WEEKS = [
+  { p: 0, t: "Arrays and hashing", s: "Python dict, set, Counter", items: [
+    ["L","hash-table","How a hash table works (hashing, collisions) and Python's dict/set/Counter"],
+    ["E","contains-duplicate","Contains Duplicate"], ["E","valid-anagram","Valid Anagram"], ["E","two-sum","Two Sum"],
+    ["M","group-anagrams","Group Anagrams"], ["M","top-k-frequent-elements","Top K Frequent Elements"],
+    ["M","product-of-array-except-self","Product of Array Except Self"], ["M","valid-sudoku","Valid Sudoku"],
+    ["M","longest-consecutive-sequence","Longest Consecutive Sequence"] ] },
+  { p: 0, t: "Two pointers", s: "Sorted arrays, left/right pointers", items: [
+    ["E","valid-palindrome","Valid Palindrome"], ["M","two-sum-ii-input-array-is-sorted","Two Sum II"],
+    ["M","3sum","3Sum"], ["M","container-with-most-water","Container With Most Water"],
+    ["E","move-zeroes","Move Zeroes"], ["H","trapping-rain-water","Trapping Rain Water"] ] },
+  { p: 0, t: "Sliding window", s: "Fixed and variable windows; deque", items: [
+    ["L","deque","Deque: collections.deque, append/popleft in O(1)"],
+    ["E","best-time-to-buy-and-sell-stock","Best Time to Buy and Sell Stock"],
+    ["M","longest-substring-without-repeating-characters","Longest Substring Without Repeating Characters"],
+    ["M","longest-repeating-character-replacement","Longest Repeating Character Replacement"],
+    ["M","permutation-in-string","Permutation in String"],
+    ["H","minimum-window-substring","Minimum Window Substring"], ["H","sliding-window-maximum","Sliding Window Maximum"] ] },
+  { p: 0, t: "Stack and queue", s: "LIFO, FIFO, monotonic stack", items: [
+    ["L","stack-queue","Implement a stack and a queue in Python from scratch"],
+    ["E","valid-parentheses","Valid Parentheses"], ["E","implement-queue-using-stacks","Implement Queue using Stacks"],
+    ["M","min-stack","Min Stack"], ["M","evaluate-reverse-polish-notation","Evaluate Reverse Polish Notation"],
+    ["M","generate-parentheses","Generate Parentheses"], ["M","daily-temperatures","Daily Temperatures"],
+    ["M","car-fleet","Car Fleet"], ["H","largest-rectangle-in-histogram","Largest Rectangle in Histogram"] ] },
+  { p: 0, t: "Binary search", s: "On arrays and on the answer", items: [
+    ["E","binary-search","Binary Search"], ["M","search-a-2d-matrix","Search a 2D Matrix"],
+    ["M","koko-eating-bananas","Koko Eating Bananas"], ["M","find-minimum-in-rotated-sorted-array","Find Minimum in Rotated Sorted Array"],
+    ["M","search-in-rotated-sorted-array","Search in Rotated Sorted Array"], ["M","time-based-key-value-store","Time Based Key-Value Store"],
+    ["H","median-of-two-sorted-arrays","Median of Two Sorted Arrays"] ] },
+  { p: 0, t: "Linked lists", s: "Pointers, fast/slow, dummy nodes", items: [
+    ["L","linked-list","Implement a singly linked list (insert, delete, reverse)"],
+    ["E","reverse-linked-list","Reverse Linked List"], ["E","merge-two-sorted-lists","Merge Two Sorted Lists"],
+    ["E","linked-list-cycle","Linked List Cycle"], ["M","reorder-list","Reorder List"],
+    ["M","remove-nth-node-from-end-of-list","Remove Nth Node From End of List"], ["M","copy-list-with-random-pointer","Copy List with Random Pointer"],
+    ["M","add-two-numbers","Add Two Numbers"], ["M","lru-cache","LRU Cache"], ["H","merge-k-sorted-lists","Merge k Sorted Lists"] ] },
+  { p: 0, t: "Sorting", s: "Know how each works and its complexity", items: [
+    ["L","simple-sorts","Bubble, selection and insertion sort: write each once, know why they're O(n²)"],
+    ["L","merge-sort","Merge sort from scratch"], ["L","quick-sort","Quick sort from scratch (partition)"],
+    ["L","heap-sort","Heap sort from scratch"], ["M","sort-an-array","Sort an Array (submit your merge sort)"],
+    ["M","sort-colors","Sort Colors"], ["M","kth-largest-element-in-an-array","Kth Largest Element in an Array"] ] },
+  { p: 0, t: "Review week", s: "Redo, don't add", items: [
+    ["D","rev-1","Redo 6 problems you needed help with, from scratch"],
+    ["D","timed-1","Timed practice: 2 medium problems, 45 minutes each, talking out loud"],
+    ["D","explain-1","Explain one solution to someone (or record yourself) in under 3 minutes"] ] },
+
+  { p: 1, t: "Trees I", s: "DFS and BFS on binary trees", items: [
+    ["L","tree","Binary tree: build one, write preorder, inorder, postorder and level order"],
+    ["E","invert-binary-tree","Invert Binary Tree"], ["E","maximum-depth-of-binary-tree","Maximum Depth of Binary Tree"],
+    ["E","diameter-of-binary-tree","Diameter of Binary Tree"], ["E","balanced-binary-tree","Balanced Binary Tree"],
+    ["E","same-tree","Same Tree"], ["E","subtree-of-another-tree","Subtree of Another Tree"],
+    ["M","binary-tree-level-order-traversal","Binary Tree Level Order Traversal"] ] },
+  { p: 1, t: "Trees II", s: "Binary search trees and harder tree problems", items: [
+    ["M","lowest-common-ancestor-of-a-binary-search-tree","Lowest Common Ancestor of a BST"],
+    ["M","binary-tree-right-side-view","Binary Tree Right Side View"], ["M","count-good-nodes-in-binary-tree","Count Good Nodes in Binary Tree"],
+    ["M","validate-binary-search-tree","Validate Binary Search Tree"], ["M","kth-smallest-element-in-a-bst","Kth Smallest Element in a BST"],
+    ["M","construct-binary-tree-from-preorder-and-inorder-traversal","Construct Binary Tree from Preorder and Inorder"],
+    ["H","binary-tree-maximum-path-sum","Binary Tree Maximum Path Sum"], ["H","serialize-and-deserialize-binary-tree","Serialize and Deserialize Binary Tree"] ] },
+  { p: 1, t: "Heaps and priority queues", s: "heapq, top-k, streaming", items: [
+    ["L","heap","Implement a min-heap (push, pop, heapify), then use heapq as a priority queue"],
+    ["E","kth-largest-element-in-a-stream","Kth Largest Element in a Stream"], ["E","last-stone-weight","Last Stone Weight"],
+    ["M","k-closest-points-to-origin","K Closest Points to Origin"], ["M","task-scheduler","Task Scheduler"],
+    ["M","design-twitter","Design Twitter"], ["H","find-median-from-data-stream","Find Median from Data Stream"] ] },
+  { p: 1, t: "Tries", s: "Prefix trees", items: [
+    ["L","trie","Implement a trie with insert, search and startsWith"],
+    ["M","implement-trie-prefix-tree","Implement Trie (Prefix Tree)"],
+    ["M","design-add-and-search-words-data-structure","Design Add and Search Words Data Structure"],
+    ["H","word-search-ii","Word Search II"] ] },
+  { p: 1, t: "Backtracking", s: "Choose, explore, undo", items: [
+    ["M","subsets","Subsets"], ["M","combination-sum","Combination Sum"], ["M","permutations","Permutations"],
+    ["M","subsets-ii","Subsets II"], ["M","combination-sum-ii","Combination Sum II"], ["M","word-search","Word Search"],
+    ["M","palindrome-partitioning","Palindrome Partitioning"], ["M","letter-combinations-of-a-phone-number","Letter Combinations of a Phone Number"],
+    ["H","n-queens","N-Queens"] ] },
+  { p: 1, t: "Graphs I", s: "Grids, BFS, DFS, topological sort", items: [
+    ["L","graph","Graph as adjacency list; write BFS and DFS (recursive and with a stack)"],
+    ["L","topo","Topological sort: Kahn's algorithm (BFS) and the DFS version"],
+    ["M","number-of-islands","Number of Islands"], ["M","max-area-of-island","Max Area of Island"],
+    ["M","clone-graph","Clone Graph"], ["M","rotting-oranges","Rotting Oranges"],
+    ["M","pacific-atlantic-water-flow","Pacific Atlantic Water Flow"], ["M","surrounded-regions","Surrounded Regions"],
+    ["M","course-schedule","Course Schedule"], ["M","course-schedule-ii","Course Schedule II"] ] },
+  { p: 1, t: "Graphs II", s: "Union-find and harder traversal", items: [
+    ["L","dsu","Disjoint set (union-find) with path compression and union by rank"],
+    ["M","redundant-connection","Redundant Connection"], ["M","number-of-provinces","Number of Provinces"],
+    ["M","accounts-merge","Accounts Merge"], ["H","word-ladder","Word Ladder"] ] },
+  { p: 1, t: "Shortest paths and spanning trees", s: "Dijkstra, Bellman-Ford, Floyd-Warshall, Kruskal, Prim", items: [
+    ["L","dijkstra","Dijkstra with heapq: single-source shortest path"],
+    ["L","bellman-ford","Bellman-Ford: negative edges, detecting a negative cycle"],
+    ["L","floyd","Floyd-Warshall: all-pairs shortest path"],
+    ["L","mst","Kruskal (uses union-find) and Prim (uses a heap)"],
+    ["M","network-delay-time","Network Delay Time (Dijkstra)"],
+    ["M","cheapest-flights-within-k-stops","Cheapest Flights Within K Stops (Bellman-Ford)"],
+    ["M","find-the-city-with-the-smallest-number-of-neighbors-at-a-threshold-distance","Find the City With the Smallest Number of Neighbors (Floyd-Warshall)"],
+    ["M","min-cost-to-connect-all-points","Min Cost to Connect All Points (Prim / Kruskal)"],
+    ["H","swim-in-rising-water","Swim in Rising Water"] ] },
+  { p: 1, t: "Review week", s: "Trees and graphs from memory", items: [
+    ["D","rev-2","Redo 6 tree and graph problems you needed help with"],
+    ["D","timed-2","Timed practice: 2 graph problems, 45 minutes each"],
+    ["D","algos-2","Write Dijkstra, union-find and topological sort from memory, no notes"] ] },
+
+  { p: 2, t: "1-D dynamic programming I", s: "Recursion → memo → table", items: [
+    ["L","dp","DP method: recursion, then @cache memoisation, then a bottom-up table"],
+    ["E","climbing-stairs","Climbing Stairs"], ["E","min-cost-climbing-stairs","Min Cost Climbing Stairs"],
+    ["M","house-robber","House Robber"], ["M","house-robber-ii","House Robber II"],
+    ["M","coin-change","Coin Change"], ["M","decode-ways","Decode Ways"] ] },
+  { p: 2, t: "1-D dynamic programming II", s: "Strings and subsequences", items: [
+    ["M","longest-palindromic-substring","Longest Palindromic Substring"], ["M","palindromic-substrings","Palindromic Substrings"],
+    ["M","maximum-product-subarray","Maximum Product Subarray"], ["M","word-break","Word Break"],
+    ["M","longest-increasing-subsequence","Longest Increasing Subsequence"], ["M","partition-equal-subset-sum","Partition Equal Subset Sum"] ] },
+  { p: 2, t: "2-D dynamic programming", s: "Grids and two strings", items: [
+    ["M","unique-paths","Unique Paths"], ["M","longest-common-subsequence","Longest Common Subsequence"],
+    ["M","best-time-to-buy-and-sell-stock-with-cooldown","Best Time to Buy and Sell Stock with Cooldown"],
+    ["M","coin-change-ii","Coin Change II"], ["M","target-sum","Target Sum"], ["M","edit-distance","Edit Distance"],
+    ["H","longest-increasing-path-in-a-matrix","Longest Increasing Path in a Matrix"] ] },
+  { p: 2, t: "Greedy and intervals", s: "Local choices, sorting by start/end", items: [
+    ["M","maximum-subarray","Maximum Subarray"], ["M","jump-game","Jump Game"], ["M","jump-game-ii","Jump Game II"],
+    ["M","gas-station","Gas Station"], ["M","merge-intervals","Merge Intervals"], ["M","insert-interval","Insert Interval"],
+    ["M","non-overlapping-intervals","Non-overlapping Intervals"], ["M","partition-labels","Partition Labels"] ] },
+  { p: 2, t: "Strings, matrices and bits", s: "KMP and the small topics", items: [
+    ["L","kmp","KMP: build the prefix (LPS) table, then search in O(n + m)"],
+    ["E","find-the-index-of-the-first-occurrence-in-a-string","Find the Index of the First Occurrence (solve with KMP)"],
+    ["M","rotate-image","Rotate Image"], ["M","spiral-matrix","Spiral Matrix"], ["M","set-matrix-zeroes","Set Matrix Zeroes"],
+    ["E","single-number","Single Number"], ["E","counting-bits","Counting Bits"], ["E","missing-number","Missing Number"],
+    ["M","powx-n","Pow(x, n)"] ] },
+
+  { p: 3, t: "System design I", s: "Building blocks", items: [
+    ["D","sd-basics","Learn: load balancing, caching, database indexes, replication, sharding, queues"],
+    ["D","sd-url","Design a URL shortener (draw it, estimate traffic, choose storage)"],
+    ["D","sd-rate","Design a rate limiter"],
+    ["D","sd-booking","Design a booking system: use your Tidewell project and how it prevents double booking"],
+    ["L","factory","Design patterns in Python: Factory, Strategy, Observer, Singleton"] ] },
+  { p: 3, t: "System design II and behavioural", s: "Bigger systems, your stories", items: [
+    ["D","sd-chat","Design a chat app"], ["D","sd-notify","Design a notification system"],
+    ["D","star","Write 6 STAR stories: Work Route module, duplicate-lead bug, journal-entry float bug, ProfitLens launch, AI assistant guardrails, a disagreement you resolved"],
+    ["D","why","Prepare 'Why Google?' and 'Tell me about yourself' (2 minutes each)"] ] },
+  { p: 3, t: "Mock interviews", s: "Practise under real conditions", items: [
+    ["D","mock-1","Mock 1 with your brother: 2 coding problems, 45 minutes, in a shared doc"],
+    ["D","mock-2","Mock 2: system design, 45 minutes"],
+    ["D","mock-3","Mock 3: behavioural, using your STAR stories"],
+    ["D","fix","Redo every problem you failed in the mocks"] ] },
+  { p: 3, t: "Referral and applications", s: "Go", items: [
+    ["D","resume","Update your CV: lead with impact numbers and your products"],
+    ["D","referral","Ask your brother for a referral to the right Google role"],
+    ["D","apply","Apply to 5–10 similar companies at the same time (Microsoft, Atlassian, Uber, Flipkart, Razorpay)"],
+    ["D","keep","Keep 3 problems a week going until the interviews"] ] },
+];
+
+const TAGS = { L: "LRN", E: "E", M: "M", H: "H", D: "DES" };
+const keyOf = (w, it) => (it[0] === "L" || it[0] === "D") ? `w${w}-${it[1]}` : it[1];
+const ALL = WEEKS.flatMap((wk, i) => wk.items.map(it => keyOf(i + 1, it)));
+
+let state = { start: "", done: {} };
+let saveTarget = null; // "db" | "local"
+let docRef = null, saveTimer = null, writing = false, pending = false;
+
+const $ = id => document.getElementById(id);
+const LS = "road-to-google-v1";
+function loadLocal() { try { const s = JSON.parse(localStorage.getItem(LS) || "null"); if (s && typeof s === "object") return s; } catch {} return null; }
+function saveLocal() { try { localStorage.setItem(LS, JSON.stringify(state)); } catch {} }
+
+function todayISO() { const d = new Date(); d.setMinutes(d.getMinutes() - d.getTimezoneOffset()); return d.toISOString().slice(0, 10); }
+function currentWeek() {
+  if (!state.start) return null;
+  const days = Math.floor((Date.parse(todayISO()) - Date.parse(state.start)) / 86400000);
+  if (Number.isNaN(days)) return null;
+  return Math.min(WEEKS.length, Math.max(1, Math.floor(days / 7) + 1));
+}
+
+function setSync(kind, text) {
+  const el = $("sync"); el.querySelector(".dot").className = "dot " + (kind || ""); el.lastElementChild.textContent = text;
+}
+
+function render() {
+  $("start").value = state.start || "";
+  const cur = currentWeek();
+  $("curWeek").textContent = cur ? `Week ${cur} of ${WEEKS.length}` : "Set a start date";
+  const doneN = ALL.filter(k => state.done[k]).length;
+  $("doneCount").textContent = `${doneN} / ${ALL.length}`;
+  $("barFill").style.width = (doneN / ALL.length * 100).toFixed(1) + "%";
+
+  const open = new Set([...document.querySelectorAll("details.week[open]")].map(d => d.dataset.w));
+  const plan = $("plan"); plan.textContent = "";
+  PHASES.forEach((ph, pi) => {
+    const sec = document.createElement("section"); sec.className = "phase";
+    const head = document.createElement("div"); head.className = "phase-head";
+    const left = document.createElement("div");
+    const h = document.createElement("h2"); h.textContent = ph.name;
+    const p = document.createElement("p"); p.textContent = ph.note;
+    left.append(h, p); head.append(left); sec.append(head);
+    WEEKS.forEach((wk, wi) => {
+      if (wk.p !== pi) return;
+      const w = wi + 1, keys = wk.items.map(it => keyOf(w, it)), n = keys.filter(k => state.done[k]).length;
+      const d = document.createElement("details"); d.className = "week" + (w === cur ? " current" : ""); d.dataset.w = w;
+      if (open.has(String(w)) || (!open.size && (w === cur || (!cur && w === 1)))) d.open = true;
+      const s = document.createElement("summary");
+      const wkEl = document.createElement("span"); wkEl.className = "wk"; wkEl.textContent = `Week ${String(w).padStart(2, "0")}`;
+      const t = document.createElement("span"); t.className = "wtitle"; t.textContent = wk.t;
+      if (w === cur) { const b = document.createElement("span"); b.className = "badge-now"; b.textContent = "This week"; t.append(b); }
+      const sm = document.createElement("small"); sm.textContent = wk.s; t.append(sm);
+      const c = document.createElement("span"); c.className = "count" + (n === keys.length ? " full" : ""); c.textContent = `${n}/${keys.length}`;
+      s.append(wkEl, t, c); d.append(s);
+      const ul = document.createElement("ul"); ul.className = "items";
+      wk.items.forEach((it, ii) => {
+        const k = keys[ii], li = document.createElement("li"); li.className = "item" + (state.done[k] ? " done" : "");
+        const cb = document.createElement("input"); cb.type = "checkbox"; cb.id = "c-" + k; cb.checked = !!state.done[k];
+        cb.addEventListener("change", () => toggle(k, cb.checked));
+        const tag = document.createElement("i"); tag.className = "tag " + it[0]; tag.textContent = TAGS[it[0]];
+        const lab = document.createElement("label"); lab.htmlFor = cb.id; lab.textContent = it[2];
+        const cell = document.createElement("div"); cell.append(lab);
+        if ("EMH".includes(it[0])) {
+          const a = document.createElement("a"); a.href = `https://leetcode.com/problems/${it[1]}/`; a.target = "_blank"; a.rel = "noopener"; a.textContent = "LeetCode ↗";
+          cell.append(a);
+        }
+        li.append(cb, tag, cell); ul.append(li);
+      });
+      d.append(ul); sec.append(d);
+    });
+    plan.append(sec);
+  });
+}
+
+function toggle(k, on) {
+  if (on) state.done[k] = true; else delete state.done[k];
+  render(); scheduleSave();
+}
+$("start").addEventListener("change", e => { state.start = e.target.value; render(); scheduleSave(); });
+
+function scheduleSave() {
+  saveLocal();
+  if (saveTarget !== "db") return;
+  clearTimeout(saveTimer); saveTimer = setTimeout(flush, 700);
+}
+async function flush() {
+  if (writing) { pending = true; return; }
+  writing = true; setSync("", "Saving…");
+  try { await docRef.set({ start: state.start, done: state.done }); setSync("ok", "Synced to your account"); }
+  catch (e) { setSync("local", "Saved on this device only (sync failed)"); }
+  writing = false;
+  if (pending) { pending = false; flush(); }
+}
+
+// Start with this device's copy, then switch to the account copy when it arrives.
+const local = loadLocal();
+if (local) state = { start: local.start || "", done: local.done || {} };
+if (!state.start) state.start = todayISO();
+render();
+
+(async () => {
+  let db = null, uid = null;
+  try {
+    const [d, u] = await Promise.all([window.claude?.use?.("db"), window.claude?.use?.("user")]);
+    db = d; uid = u ? await u.id() : null;
+  } catch {}
+  if (!db || !uid) { saveTarget = "local"; setSync("local", "Saved on this device only (sign in to sync)"); return; }
+  saveTarget = "db";
+  docRef = db.doc(`data/users/${uid}/progress`);
+  const timer = setTimeout(() => setSync("local", "Can't reach your account yet; saving on this device"), 10000);
+  let first = true;
+  docRef.onSnapshot(snap => {
+    if (!snap.metadata.fromCache) clearTimeout(timer);
+    if (snap.exists) {
+      const data = snap.data();
+      if (!writing && !snap.metadata.hasPendingWrites) {
+        state = { start: data.start || state.start, done: { ...(data.done || {}) } };
+        saveLocal(); render();
+      }
+      if (!snap.metadata.fromCache) setSync("ok", "Synced to your account");
+    } else if (first && !snap.metadata.fromCache) {
+      flush(); // first visit: copy this device's progress to the account
+    }
+    first = false;
+  }, () => { clearTimeout(timer); saveTarget = "local"; setSync("local", "Saved on this device only"); });
+})();
+</script>
+
+</body></html>
